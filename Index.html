@@ -1,0 +1,1022 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ferramentas Digitais Offline - Mikael Programador</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* Estilos CSS embutidos */
+        body {
+            font-family: 'Roboto', sans-serif; /* Usando a fonte do Google */
+            margin: 0;
+            padding: 0;
+            background-color: #e0f2f7; /* Um azul claro */
+            color: #333;
+            line-height: 1.6;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; /* Alinha no topo */
+            min-height: 100vh; /* Garante que o body ocupa a altura total da viewport */
+            padding-top: 30px;
+            padding-bottom: 30px;
+        }
+        .container {
+            width: 90%;
+            max-width: 900px;
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            animation: fadeIn 1s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 35px;
+            border-bottom: 2px solid #b3e0ff;
+            padding-bottom: 20px;
+        }
+        h1 {
+            color: #007bff; /* Azul vibrante */
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+        h2 {
+            color: #0056b3; /* Azul mais escuro */
+            font-size: 1.8em;
+            margin-top: 35px;
+            margin-bottom: 15px;
+            border-bottom: 1px dashed #cceeff;
+            padding-bottom: 5px;
+        }
+        .section-tool {
+            background-color: #f0f8ff; /* Fundo mais claro para seções */
+            padding: 25px;
+            margin-bottom: 25px;
+            border-radius: 8px;
+            border: 1px solid #cceeff;
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 700;
+            color: #444;
+        }
+        input[type="text"], textarea, select {
+            width: calc(100% - 22px); /* Ajuste para padding e border */
+            padding: 11px;
+            margin-bottom: 18px;
+            border: 1px solid #a0d9ff;
+            border-radius: 6px;
+            font-size: 1.05em;
+            box-sizing: border-box; /* Inclui padding e border no width */
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        input[type="text"]:focus, textarea:focus, select:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 8px rgba(0,123,255,0.25);
+            outline: none;
+        }
+        button {
+            background-color: #28a745; /* Verde vibrante */
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1.15em;
+            font-weight: 700;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            display: block; /* Ocupa a largura total */
+            width: 100%;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #218838; /* Verde mais escuro */
+            transform: translateY(-2px);
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e6ffed; /* Verde claro para resultados */
+            border-left: 6px solid #28a745;
+            border-radius: 8px;
+            font-size: 1.1em;
+            color: #1a5e2a;
+            white-space: pre-wrap; /* Preserva quebras de linha */
+            word-wrap: break-word; /* Quebra palavras longas */
+            max-height: 200px; /* Limita a altura para o scroll */
+            overflow-y: auto; /* Adiciona scroll se o conteúdo for muito grande */
+        }
+        .error-message {
+            color: #dc3545; /* Vermelho para erros */
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        #loopStatus {
+            margin-top: 15px;
+            font-weight: bold;
+            color: #0056b3;
+        }
+        #loopCountdown {
+            font-style: italic;
+            color: #555;
+        }
+        #loopCounter { /* Novo estilo para o contador de loop */
+            font-weight: bold;
+            color: #007bff;
+            margin-top: 5px;
+        }
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 25px;
+            border-top: 1px dashed #b3e0ff;
+            color: #666;
+            font-size: 0.9em;
+        }
+        footer p {
+            margin: 5px 0;
+        }
+
+        /* Estilos para o Pop-up de Cookies */
+        .cookie-consent-banner {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #333;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            z-index: 1000;
+        }
+        .cookie-consent-banner p {
+            margin: 0;
+            font-size: 0.9em;
+        }
+        .cookie-consent-banner button {
+            background-color: #007bff;
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: background-color 0.3s ease;
+            width: auto; /* Sobrescreve o estilo geral do botão */
+            margin-top: 0;
+        }
+        .cookie-consent-banner button:hover {
+            background-color: #0056b3;
+            transform: none; /* Sobrescreve o hover de transform */
+        }
+
+        /* Estilos para o Pop-up de Idioma */
+        .language-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1001;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .language-modal.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        .language-modal-content {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+            text-align: center;
+            width: 90%;
+            max-width: 500px;
+            transform: translateY(-20px);
+            transition: transform 0.3s ease;
+        }
+        .language-modal.show .language-modal-content {
+            transform: translateY(0);
+        }
+        .language-modal-content h3 {
+            color: #007bff;
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+        .language-modal-content select {
+            width: calc(100% - 40px); /* Ajuste para padding */
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #a0d9ff;
+            border-radius: 6px;
+            font-size: 1.1em;
+            box-sizing: border-box;
+            -webkit-appearance: none; /* Remove seta padrão em alguns browsers */
+            -moz-appearance: none;
+            appearance: none;
+            background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007bff%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-6.5%200-12.3%203.2-16.2%208.1-3.9%204.9-4.8%2011.6-2.5%2017.5l135%20228.3c3.7%206.3%2010.4%209.7%2017.4%209.7s13.7-3.4%2017.4-9.7l135-228.3c2.3-5.9%201.4-12.6-2.5-17.5z%22%2F%3E%3C%2Fsvg%3E');
+            background-repeat: no-repeat;
+            background-position: right 15px top 50%;
+            background-size: 15px auto;
+        }
+        .language-modal-content button {
+            background-color: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1.05em;
+            font-weight: 700;
+            transition: background-color 0.3s ease;
+            width: auto; /* Sobrescreve o estilo geral do botão */
+        }
+        .language-modal-content button:hover {
+            background-color: #218838;
+            transform: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Kit de Ferramentas Essenciais do Mikael</h1>
+            <p>Conceitos de programação da Paraíba para o seu navegador!</p>
+        </header>
+
+        <section class="section-tool">
+            <h2>Calculadora Básica</h2>
+            <label for="calcExpression">Digite uma expressão matemática (ex: 10 + 5 * (2 - 1)):</label>
+            <input type="text" id="calcExpression" placeholder="Use +, -, *, /, %, ()">
+            <button onclick="performCalculation()">Calcular</button>
+            <div class="result" id="calcResult"></div>
+            <div class="error-message" id="calcError"></div>
+        </section>
+
+        <section class="section-tool">
+            <h2>Conversor de Medidas</h2>
+            <label for="measureValue">Valor:</label>
+            <input type="text" id="measureValue" placeholder="Ex: 10">
+            <label for="measureUnitFrom">De (unidade):</label>
+            <select id="measureUnitFrom">
+                <option value="m">Metros (m)</option>
+                <option value="km">Quilômetros (km)</option>
+                <option value="cm">Centímetros (cm)</option>
+                <option value="in">Polegadas (in)</option>
+                <option value="ft">Pés (ft)</option>
+            </select>
+            <label for="measureUnitTo">Para (unidade):</label>
+            <select id="measureUnitTo">
+                <option value="km">Quilômetros (km)</option>
+                <option value="m">Metros (m)</option>
+                <option value="cm">Centímetros (cm)</option>
+                <option value="in">Polegadas (in)</option>
+                <option value="ft">Pés (ft)</option>
+            </select>
+            <button onclick="convertMeasurement()">Converter Medida</button>
+            <div class="result" id="measureResult"></div>
+            <div class="error-message" id="measureError"></div>
+        </section>
+
+        <section class="section-tool">
+            <h2>"Transcritor" / Formatador de Texto</h2>
+            <p><small>Nota: Esta função simula uma "transcrição" formatando o texto, não processando áudio real.</small></p>
+            <label for="transcribeText">Texto original:</label>
+            <textarea id="transcribeText" rows="6" placeholder="Cole seu texto para análise ou formatação."></textarea>
+            <button onclick="processTranscription()">Processar Texto</button>
+            <div class="result" id="transcribeResult"></div>
+        </section>
+
+        <section class="section-tool">
+            <h2>"Tradutor" Simples (Português &lt;-> Inglês)</h2>
+            <p><small>Nota: Esta função faz uma "tradução" muito básica e direta de palavras e algumas frases. **Não é um tradutor real.**</small></p>
+            <label for="translateText">Texto:</label>
+            <textarea id="translateText" rows="6" placeholder="Digite o texto para ser traduzido."></textarea>
+            <label for="translateDirection">Direção da Tradução:</label>
+            <select id="translateDirection">
+                <option value="pt-en">Português para Inglês</option>
+                <option value="en-pt">Inglês para Português</option>
+            </select>
+            <button onclick="performSimpleTranslation()">Traduzir</button>
+            <div class="result" id="translateResult"></div>
+        </section>
+
+        <section class="section-tool">
+            <h2>Gerador de Reflexões Profundas</h2>
+            <p><small>Clique em "Iniciar Loop" para gerar reflexões a cada 3ms por 1h 45min 30s.</small></p>
+            <button id="startLoopBtn" onclick="startDeepThoughtLoop()">Iniciar Loop</button>
+            <button id="stopLoopBtn" onclick="stopDeepThoughtLoop()" style="background-color: #dc3545; margin-top: 10px;" disabled>Parar Loop</button>
+            <div id="loopStatus">Status: Parado</div>
+            <div id="loopCountdown">Tempo restante: 00:00:00</div>
+            <div id="loopCounter">Reflexões geradas: 0</div> <div class="result" id="deepThoughtOutput"></div>
+        </section>
+
+        <section class="section-tool">
+            <h2>Contador de Ocorrências (Texto Genérico)</h2>
+            <p><small>Analisa o texto e conta a ocorrência de cada palavra ou frase.</small></p>
+            <label for="genericTextCount">Texto para Análise:</label>
+            <textarea id="genericTextCount" rows="6" placeholder="Cole ou digite o texto para contar ocorrências."></textarea>
+            <label for="countType">Contar por:</label>
+            <select id="countType">
+                <option value="word">Palavra (individual)</option>
+                <option value="sentence">Frase (por ponto final/exclamação/interrogação)</option>
+                <option value="line">Linha (por quebra de linha)</option>
+            </select>
+            <button onclick="performGenericCount()">Analisar Texto</button>
+            <div class="result" id="genericCountResult"></div>
+        </section>
+
+        <section class="section-tool">
+            <h2>Ofuscador de Código (JS/Python)</h2>
+            <p><small>Ferramenta simples para dificultar a leitura de código JavaScript ou Python. **Não é uma ofuscação robusta.**</small></p>
+            <p><small>Limite de texto: 20KB (aproximadamente 20.000 caracteres).</small></p>
+            <label for="codeToObfuscate">Cole seu código aqui:</label>
+            <textarea id="codeToObfuscate" rows="10" placeholder="Ex: function meuBot() { console.log('Olá mundo!'); }" maxlength="20000"></textarea>
+            <button onclick="obfuscateCode()">Ofuscar Código</button>
+            <div class="result" id="obfuscatedCodeResult"></div>
+            <div class="error-message" id="obfuscateError"></div>
+        </section>
+
+        <footer>
+            <p>Desenvolvido por Mikael Programador.</p>
+            <p>Idade: 17 anos | Local: Paraíba, PB | Instagram: 083_Mikael_Programador</p>
+            <p>Um pequeno software totalmente em HTML, CSS e JavaScript puro!</p>
+        </footer>
+    </div>
+
+    <div class="cookie-consent-banner" id="cookieConsentBanner">
+        <p>Este site usa cookies para garantir que você tenha a melhor experiência. Ao continuar, você concorda com o uso de cookies.</p>
+        <button onclick="acceptCookies()">Concordar</button>
+    </div>
+
+    <div class="language-modal" id="languageModal">
+        <div class="language-modal-content">
+            <h3>Selecione seu Idioma</h3>
+            <p>Por favor, escolha o idioma que você prefere para este site:</p>
+            <select id="languageSelector">
+                <option value="en">English</option>
+                <option value="pt">Português</option>
+                <option value="es">Español</option>
+                <option value="de">Deutsch</option>
+                <option value="fr">Français</option>
+                <option value="it">Italiano</option>
+                <option value="nl">Nederlands</option>
+                <option value="ru">Русский</option>
+                <option value="zh">中文 (Mandarin)</option>
+                <option value="ja">日本語 (Japanese)</option>
+                <option value="ko">한국어 (Korean)</option>
+                <option value="ar">العربية (Arabic)</option>
+                <option value="hi">हिन्दी (Hindi)</option>
+                <option value="tr">Türkçe</option>
+                <option value="pl">Polski</option>
+                <option value="sv">Svenska</option>
+                <option value="da">Dansk</option>
+                <option value="fi">Suomi</option>
+                <option value="no">Norsk</option>
+                <option value="ka">ქართული (Georgian)</option>
+            </select>
+            <button onclick="setLanguage()">Confirmar Idioma</button>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript embutido para as funcionalidades
+
+        // --- Variáveis Globais para o Loop de Reflexões ---
+        let deepThoughtInterval;
+        let loopTimeout;
+        let countdownInterval;
+        let thoughtCount = 0; // Novo contador para as reflexões geradas
+        const LOOP_DURATION_MS = (1 * 60 * 60 * 1000) + (45 * 60 * 1000) + (30 * 1000); // 1h 45min 30s em milissegundos
+        let startTime;
+
+        const deepThoughts = [
+            "A mente é um universo em constante expansão.",
+            "O silêncio esconde as maiores verdades.",
+            "Cada respiração é uma nova oportunidade.",
+            "A mudança é a única constante do universo.",
+            "O que você busca, também está buscando você.",
+            "A verdadeira sabedoria reside em saber que nada se sabe.",
+            "Somos o que pensamos. Tudo o que somos surge com nossos pensamentos.",
+            "A vida não é esperar a tempestade passar, é aprender a dançar na chuva.",
+            "O propósito da vida é uma vida com propósito.",
+            "A complexidade está na simplicidade que ignoramos.",
+            "A maior prisão está em nossos próprios pensamentos.",
+            "A arte de viver é saber usar a passagem do tempo.",
+            "O presente é a ponte entre o passado e o futuro.",
+            "A felicidade não é um destino, é uma jornada.",
+            "Qual o seu maior medo? E por que ele existe?",
+            "O que te impede de ser quem você realmente é?",
+            "A persistência transforma o impossível em possível.",
+            "A verdadeira força está na sua vulnerabilidade.",
+            "Escute o que o seu silêncio diz.",
+            "As maiores lições vêm dos maiores desafios.",
+            "A essência da existência é a conexão.",
+            "O universo conspira a favor de quem não conspira contra ninguém.",
+            "Sua percepção cria sua realidade.",
+            "A bondade é a linguagem que o cego vê e o surdo ouve.",
+            "O futuro pertence àqueles que acreditam na beleza de seus sonhos.",
+            "Somos todos feitos de estrelas, e para as estrelas voltaremos.",
+            "A vida é um eco. O que você envia, volta.",
+            "Abrace a incerteza. Ela é a porta para novas possibilidades.",
+            "Onde está sua atenção, está sua energia.",
+            "A simplicidade é a chave para o gênio.",
+            "A beleza está nos olhos de quem vê o infinito.",
+            "Não conte os dias, faça os dias contarem.",
+            "A jornada de mil milhas começa com um único passo.",
+            "Seja a mudança que você deseja ver no mundo.",
+            "O que você não expressa, te oprime.",
+            "A intuição é a bússola da alma.",
+            "Aprecie o processo, não apenas o resultado.",
+            "Toda semente de sucesso começa com uma intenção.",
+            "A verdadeira liberdade é viver sem arrependimentos.",
+            "O aprendizado é o único tesouro que a traça não corrói.",
+            "O poder da sua mente é ilimitado.",
+            "Qual é a sua verdade mais profunda?",
+            "O que você faria se soubesse que não pode falhar?",
+            "A vida começa onde sua zona de conforto termina.",
+            "Seja paciente consigo mesmo, o crescimento leva tempo.",
+            "Sua história ainda está sendo escrita.",
+            "Encontre a luz mesmo nos dias mais escuros.",
+            "A gratidão transforma o que temos em suficiente.",
+            "O amor é a força mais poderosa do universo.",
+            "Abrace sua unicidade, ela é sua maior força.",
+            "A vida é um presente. Abra-o com alegria."
+        ];
+
+
+        // --- Função de Calculadora ---
+        function performCalculation() {
+            const expression = document.getElementById('calcExpression').value;
+            const resultDiv = document.getElementById('calcResult');
+            const errorDiv = document.getElementById('calcError');
+            resultDiv.textContent = '';
+            errorDiv.textContent = '';
+
+            if (expression.trim() === '') {
+                errorDiv.textContent = 'Por favor, digite uma expressão.';
+                return;
+            }
+
+            try {
+                const result = eval(expression);
+                if (isNaN(result) || !isFinite(result)) {
+                    errorDiv.textContent = 'Expressão inválida ou resultado não numérico.';
+                } else {
+                    resultDiv.textContent = `Resultado: ${result}`;
+                }
+            } catch (e) {
+                errorDiv.textContent = `Erro na expressão: ${e.message}`;
+            }
+        }
+
+        // --- Função de Conversor de Medidas ---
+        const conversionRates = {
+            'm_km': 0.001, 'm_cm': 100, 'm_in': 39.3701, 'm_ft': 3.28084,
+            'km_m': 1000, 'km_cm': 100000, 'km_in': 39370.1, 'km_ft': 3280.84,
+            'cm_m': 0.01, 'cm_km': 0.00001, 'cm_in': 0.393701, 'cm_ft': 0.0328084,
+            'in_m': 0.0254, 'in_km': 0.0000254, 'in_cm': 2.54, 'in_ft': 0.0833333,
+            'ft_m': 0.3048, 'ft_km': 0.0003048, 'ft_cm': 30.48, 'ft_in': 12
+        };
+
+        function convertMeasurement() {
+            const valueStr = document.getElementById('measureValue').value;
+            const unitFrom = document.getElementById('measureUnitFrom').value;
+            const unitTo = document.getElementById('measureUnitTo').value;
+            const resultDiv = document.getElementById('measureResult');
+            const errorDiv = document.getElementById('measureError');
+            resultDiv.textContent = '';
+            errorDiv.textContent = '';
+
+            const value = parseFloat(valueStr);
+
+            if (isNaN(value)) {
+                errorDiv.textContent = 'Por favor, digite um valor numérico.';
+                return;
+            }
+            if (unitFrom === unitTo) {
+                resultDiv.textContent = `Resultado: ${value} ${unitTo}`;
+                return;
+            }
+
+            const key = `${unitFrom}_${unitTo}`;
+            if (conversionRates[key]) {
+                const convertedValue = value * conversionRates[key];
+                resultDiv.textContent = `Resultado: ${convertedValue.toFixed(4)} ${unitTo}`;
+            } else {
+                errorDiv.textContent = 'Conversão não suportada para estas unidades.';
+            }
+        }
+
+        // --- Função de "Transcritor" / Formatador de Texto ---
+        function processTranscription() {
+            const text = document.getElementById('transcribeText').value;
+            const resultDiv = document.getElementById('transcribeResult');
+            resultDiv.textContent = '';
+
+            if (text.trim() === '') {
+                resultDiv.textContent = 'Nenhum texto para processar.';
+                return;
+            }
+
+            let processed = text.toUpperCase().trim().replace(/\s+/g, ' ');
+            resultDiv.textContent = `--- Transcrição Formatada ---\n\n${processed}\n\n--- Fim da Transcrição ---`;
+        }
+
+        // --- Função de "Tradutor" Simples (Bidirecional) ---
+        function performSimpleTranslation() {
+            const text = document.getElementById('translateText').value;
+            const direction = document.getElementById('translateDirection').value;
+            const resultDiv = document.getElementById('translateResult');
+            resultDiv.textContent = '';
+
+            if (text.trim() === '') {
+                resultDiv.textContent = 'Nenhum texto para traduzir.';
+                return;
+            }
+
+            const ptToEnDictionary = {
+                // Saudações e Expressões Comuns
+                "olá": "Hello", "oi": "Hi", "bom": "good", "dia": "day", "boa": "good", "tarde": "afternoon", "noite": "night",
+                "sim": "yes", "não": "no", "por": "for", "favor": "please", "obrigado": "thank you", "obrigada": "thank you",
+                "desculpe": "sorry", "com licença": "excuse me", "ajuda": "help", "água": "water", "comida": "food",
+                "adeus": "goodbye", "até mais": "see you later", "bem-vindo": "welcome", "prazer": "pleasure",
+                "como": "how", "está": "is/are", "você": "you", "tudo": "all", "bem": "well/fine",
+                "meu nome é": "my name is", "qual o seu nome": "what is your name", "eu sou": "I am",
+
+                // Pronomes e Artigos
+                "eu": "I", "você": "you", "ele": "he", "ela": "she", "nós": "we", "eles": "they", "elas": "they",
+                "meu": "my", "minha": "my", "seus": "your", "sua": "your", "nossos": "our", "nossas": "our",
+                "o": "the", "a": "the", "os": "the", "as": "the", "um": "a", "uma": "a",
+
+                // Verbos Comuns (Infinitivo - simplificado)
+                "ser": "to be", "estar": "to be", "ter": "to have", "fazer": "to do/make", "ir": "to go", "vir": "to come",
+                "falar": "to speak", "ver": "to see", "dar": "to give", "querer": "to want", "poder": "can/to be able",
+                "saber": "to know", "gostar": "to like", "amar": "to love", "trabalhar": "to work", "estudar": "to study",
+                "morar": "to live", "pensar": "to think", "precisar": "to need", "comprar": "to buy", "vender": "to sell",
+
+                // Substantivos Comuns
+                "casa": "house", "carro": "car", "livro": "book", "mesa": "table", "cadeira": "chair", "sol": "sun",
+                "chuva": "rain", "cidade": "city", "país": "country", "mundo": "world", "tempo": "time/weather", "dinheiro": "money",
+                "trabalho": "work", "escola": "school", "universidade": "university", "amigo": "friend", "família": "family",
+                "pai": "father", "mãe": "mother", "irmão": "brother", "irmã": "sister", "filho": "son", "filha": "daughter",
+                "computador": "computer", "celular": "phone", "internet": "internet", "tecnologia": "technology", "dados": "data",
+                "informação": "information", "projeto": "project", "ideia": "idea", "problema": "problem", "solução": "solution",
+
+                // Adjetivos Comuns
+                "grande": "big", "pequeno": "small", "novo": "new", "velho": "old", "bom": "good", "mau": "bad",
+                "feliz": "happy", "triste": "sad", "rápido": "fast", "lento": "slow", "fácil": "easy", "difícil": "difficult",
+                "quente": "hot", "frio": "cold", "bonito": "beautiful", "feio": "ugly", "limpo": "clean", "sujo": "dirty",
+
+                // Advérbios e Conjunções
+                "e": "and", "ou": "or", "mas": "but", "porque": "because", "se": "if", "então": "then", "agora": "now",
+                "depois": "later/after", "sempre": "always", "nunca": "never", "aqui": "here", "ali": "there", "muito": "very/much",
+                "pouco": "little", "talvez": "maybe", "certamente": "certainly", "ainda": "still", "já": "already",
+
+                // Termos de Programação/Digital
+                "programador": "programmer", "software": "software", "código": "code", "digital": "digital",
+                "marketing": "marketing", "site": "website", "aplicativo": "app", "linguagem": "language",
+                "desenvolvimento": "development", "criar": "create", "funcionar": "work", "erro": "error",
+                "conectar": "connect", "servidor": "server", "web": "web", "aprender": "learn", "dados": "data",
+                "algoritmo": "algorithm", "variável": "variable", "função": "function", "classe": "class",
+                "interface": "interface", "usuário": "user", "sistema": "system", "rede": "network",
+                "segurança": "security", "otimização": "optimization", "deploy": "deploy", "banco de dados": "database",
+
+                // Gírias e Expressões Regionais (Paraíba, RJ, SP) - ATENÇÃO: TRADUÇÕES APROXIMADAS!
+                // Paraíba
+                "oxente": "Oh, my!", // Espanto/Surpresa
+                "massa": "cool / awesome", // Legal, bom
+                "arretado": "awesome / great", // Algo muito bom, top
+                "égua": "Wow! / Oh my!", // Surpresa, admiração (mais do Norte/Nordeste em geral)
+                "mainha": "mommy", // Mamy (carinhoso)
+                "papai": "daddy", // Papai (carinhoso)
+                "tabacudo": "idiot / dummy", // Bobo, tolo
+                "cabra": "guy / dude", // Cara, sujeito
+                "boy": "dude", // Cara (popular em algumas regiões)
+                "bixiga": "damn it!", // Expressão de raiva/frustração (diminutivo de bexiga)
+
+                // Rio de Janeiro
+                "irado": "awesome / cool", // Muito legal
+                "maneiro": "cool / nice", // Legal, bacana
+                "sinistro": "intense / crazy good", // Algo muito bom, impressionante (ou ruim, depende do contexto)
+                "bolado": "upset / worried", // Chateado, preocupado
+                "caô": "lie / nonsense", // Mentira, papo furado
+                "já é": "deal / let's do it", // Combinado, ok
+                "parada": "thing / situation", // Coisa, situação
+                "gato": "handsome guy", "gata": "beautiful girl", // Bonito/a
+                "firmeza": "cool / solid", // Ok, de boa, confiável
+
+                // São Paulo
+                "da hora": "cool / awesome", // Legal, bacana
+                "mina": "girl / chick", // Garota
+                "mano": "bro / dude", // Irmão, cara
+                "trampo": "work / job", // Trabalho
+                "treta": "problem / trouble", // Briga, confusão, problema
+                "chapa": "friend / buddy", // Amigo
+                "e aí": "what's up", // Saudação
+                "cair fora": "to leave / get out", // Sair, ir embora
+                "tipo assim": "like / kinda", // Expressão para introduzir exemplo ou explicar
+
+                // Mais palavras gerais para ultrapassar 50
+                "azul": "blue", "verde": "green", "vermelho": "red", "amarelo": "yellow", "preto": "black", "branco": "white",
+                "grande": "big", "pequeno": "small", "rápido": "fast", "lento": "slow", "feliz": "happy", "triste": "sad",
+                "bom": "good", "ruim": "bad", "certo": "right", "errado": "wrong", "sempre": "always", "nunca": "never",
+                "hoje": "today", "ontem": "yesterday", "amanhã": "tomorrow", "agora": "now", "depois": "later",
+                "manhã": "morning", "tarde": "afternoon", "noite": "night", "minuto": "minute", "hora": "hour", "dia": "day", "semana": "week", "mês": "month", "ano": "year",
+                "criança": "child", "adulto": "adult", "idoso": "elderly", "homem": "man", "mulher": "woman",
+                "comer": "to eat", "beber": "to drink", "dormir": "to sleep", "acordar": "to wake up", "correr": "to run",
+                "andar": "to walk", "cantar": "to sing", "dançar": "to dance", "ler": "to read", "escrever": "to write",
+                "ouvir": "to listen", "sentir": "to feel", "pensar": "to think", "sonhar": "to dream", "jogar": "to play",
+                "aprender": "to learn", "ensinar": "to teach", "exemplo": "example", "explicação": "explanation", "pergunta": "question", "resposta": "answer",
+                "crescer": "to grow", "evoluir": "to evolve", "melhorar": "to improve", "ajudar": "to help", "suporte": "support",
+                "desafio": "challenge", "oportunidade": "opportunity", "futuro": "future", "passado": "past", "presente": "present",
+                "internet": "internet", "online": "online", "offline": "offline", "digital": "digital", "teclado": "keyboard", "mouse": "mouse",
+                "tela": "screen", "aplicativo": "app", "sistema": "system", "processo": "process", "interface": "interface",
+                "conteúdo": "content", "criar": "create", "publicar": "publish", "compartilhar": "share", "engajar": "engage",
+                "cliente": "client", "venda": "sale", "lucro": "profit", "preço": "price", "serviço": "service",
+                "produto": "product", "marca": "brand", "empresa": "company", "equipe": "team", "gestão": "management",
+                "estratégia": "strategy", "campanha": "campaign", "meta": "goal", "resultado": "result", "análise": "analysis",
+                "relatório": "report", "mercado": "market", "pesquisa": "research", "descoberta": "discovery", "inovação": "innovation",
+                "qualidade": "quality", "valor": "value", "benefício": "benefit", "experiência": "experience", "satisfação": "satisfaction",
+                "comunicação": "communication", "mensagem": "message", "conversar": "to talk", "escutar": "to listen", "entender": "to understand",
+                "todos": "all", "equipamentos": "equipment", "pessoal": "personal", "informação": "information",
+                "televisão": "television", "radio": "radio", "geladeira": "refrigerator", "fogão": "stove", "microondas": "microwave",
+                "janela": "window", "porta": "door", "parede": "wall", "chão": "floor", "teto": "ceiling",
+                "rua": "street", "avenida": "avenue", "praça": "square", "parque": "park", "hospital": "hospital",
+                "farmácia": "pharmacy", "supermercado": "supermarket", "loja": "store", "restaurante": "restaurant", "hotel": "hotel",
+                "carro": "car", "ônibus": "bus", "moto": "motorcycle", "bicicleta": "bicycle", "avião": "plane", "trem": "train",
+                "barco": "boat", "navio": "ship", "aeroporto": "airport", "estação": "station", "rodoviária": "bus station",
+                "segunda-feira": "Monday", "terça-feira": "Tuesday", "quarta-feira": "Wednesday", "quinta-feira": "Thursday", "sexta-feira": "Friday",
+                "sábado": "Saturday", "domingo": "Sunday", "janeiro": "January", "fevereiro": "February", "março": "March",
+                "abril": "April", "maio": "May", "junho": "June", "julho": "July", "agosto": "August", "setembro": "September",
+                "outubro": "October", "novembro": "November", "dezembro": "December", "verão": "summer", "inverno": "winter",
+                "primavera": "spring", "outono": "autumn", "calor": "heat", "frio": "cold", "ensolarado": "sunny", "nublado": "cloudy",
+                "chuvoso": "rainy", "neve": "snow", "vento": "wind", "tempestade": "storm", "raio": "lightning", "trovão": "thunder",
+                "terra": "earth", "céu": "sky", "mar": "sea", "rio": "river", "lago": "lake", "montanha": "mountain",
+                "floresta": "forest", "árvore": "tree", "flor": "flower", "grama": "grass", "planta": "plant",
+                "animal": "animal", "cão": "dog", "gato": "cat", "pássaro": "bird", "peixe": "fish", "cavalo": "horse",
+                "vaca": "cow", "porco": "pig", "galinha": "chicken", "cobra": "snake", "leão": "lion", "tigre": "tiger",
+                "elefante": "elephant", "macaco": "monkey", "abelha": "bee", "formiga": "ant", "borboleta": "butterfly",
+                "corpo": "body", "cabeça": "head", "cabelo": "hair", "olho": "eye", "orelha": "ear", "nariz": "nose",
+                "boca": "mouth", "dente": "tooth", "língua": "tongue", "pescoço": "neck", "braço": "arm", "mão": "hand",
+                "dedo": "finger", "perna": "leg", "pé": "foot", "joelho": "knee", "cotovelo": "elbow", "ombro": "shoulder",
+                "coração": "heart", "pulmão": "lung", "estômago": "stomach", "cérebro": "brain", "sangue": "blood",
+                "osso": "bone", "músculo": "muscle", "pele": "skin", "saúde": "health", "doença": "illness", "dor": "pain",
+                "médico": "doctor", "enfermeiro": "nurse", "remédio": "medicine", "hospital": "hospital", "clínica": "clinic",
+                "alegria": "joy", "tristeza": "sadness", "raiva": "anger", "medo": "fear", "amor": "love", "ódio": "hate",
+                "esperança": "hope", "felicidade": "happiness", "paz": "peace", "guerra": "war", "liberdade": "freedom",
+                "justiça": "justice", "lei": "law", "governo": "government", "política": "politics", "economia": "economy",
+                "cultura": "culture", "arte": "art", "música": "music", "filme": "film/movie", "livro": "book", "história": "history/story",
+                "filosofia": "philosophy", "ciência": "science", "matemática": "mathematics", "física": "physics", "química": "chemistry",
+                "biologia": "biology", "geografia": "geography", "história": "history", "literatura": "literature", "educação": "education",
+                "conhecimento": "knowledge", "sabedoria": "wisdom", "verdade": "truth", "mentira": "lie", "segredo": "secret",
+                "dúvida": "doubt", "fé": "faith", "religião": "religion", "espiritualidade": "spirituality", "oração": "prayer",
+                "meditação": "meditação", "silêncio": "silence", "natureza": "nature", "universo": "universe", "planeta": "planet",
+                "estrela": "star", "sol": "sun", "lua": "moon", "galáxia": "galaxy", "espaço": "space",
+                "tempo": "time", "passado": "past", "presente": "present", "futuro": "future", "momento": "moment",
+                "experiência": "experience", "memória": "memory", "sonho": "dream", "realidade": "reality", "ilusão": "illusion",
+                "desejo": "desire", "necessidade": "need", "vontade": "will", "escolha": "choice", "consequência": "consequence",
+                "ação": "action", "reação": "reaction", "causa": "cause", "efeito": "effect", "propósito": "purpose",
+                "significado": "meaning", "sentido": "sense", "conexão": "connection", "relação": "relation", "interação": "interaction",
+                "desafio": "challenge", "superar": "to overcome", "crescer": "to grow", "aprender": "to learn", "evoluir": "to evolve",
+                "mudança": "change", "transformação": "transformation", "progresso": "progress", "evolução": "evolution", "desenvolvimento": "development",
+                "inovar": "to innovate", "criar": "to create", "construir": "to build", "destruir": "to destroy", "começar": "to start",
+                "terminar": "to finish", "parar": "to stop", "continuar": "to continue", "esperar": "to wait", "acabar": "to end",
+                "abrir": "to open", "fechar": "to close", "ligar": "to turn on", "desligar": "to turn off", "entrar": "to enter",
+                "sair": "to leave", "subir": "to go up", "descer": "to go down", "longe": "far", "perto": "near",
+                "dentro": "inside", "fora": "outside", "em cima": "on top", "em baixo": "below", "esquerda": "left", "direita": "right",
+                "centro": "center", "frente": "front", "trás": "back", "lado": "side", "caminho": "path", "direção": "direction",
+                "destino": "destination", "origem": "origin", "ponto": "point", "linha": "line", "círculo": "circle",
+                "quadrado": "square", "triângulo": "triangle", "forma": "shape", "cor": "color", "som": "sound",
+                "luz": "light", "escuridão": "darkness", "calor": "heat", "frio": "cold", "energia": "energy",
+                "força": "force", "poder": "power", "fraqueza": "weakness", "equilíbrio": "balance", "harmonia": "harmony",
+                "caos": "chaos", "ordem": "order", "sistema": "system", "estrutura": "structure", "componente": "component",
+                "parte": "part", "todo": "whole", "fragmento": "fragment", "conexão": "connection", "interdependência": "interdependence",
+                "real": "real", "virtual": "virtual", "físico": "physical", "mental": "mental", "espiritual": "spiritual",
+                "emocional": "emotional", "social": "social", "cultural": "cultural", "histórico": "historical", "científico": "scientific",
+                "artístico": "artistic", "filosófico": "philosophical", "psicológico": "psychological", "político": "political", "econômico": "economic",
+                "geográfico": "geographical", "biológico": "biological", "químico": "chemical", "matemático": "mathematical",
+                "único": "unique", "comum": "common", "diferente": "different", "similar": "similar", "igual": "equal",
+                "maior": "bigger", "menor": "smaller", "melhor": "better", "pior": "worse", "mais": "more", "menos": "less",
+                "primeiro": "first", "último": "last", "próximo": "next", "anterior": "previous", "único": "only", "duplo": "double",
+                "triplo": "triple", "múltiplo": "multiple", "zero": "zero", "um": "one", "dois": "two", "três": "three",
+                "quatro": "four", "cinco": "five", "seis": "six", "sete": "seven", "oito": "eight", "nove": "nine", "dez": "ten",
+                "cem": "hundred", "mil": "thousand", "milhão": "million", "bilhão": "billion",
+                "obviamente": "obviously", "geralmente": "generally", "especialmente": "especially", "normalmente": "normally",
+                "apenas": "just", "somente": "only", "também": "also", "ainda": "still", "nunca": "never",
+                "sem": "without", "com": "with", "entre": "between", "sobre": "about/on", "sob": "under",
+                "através": "through", "durante": "during", "antes": "before", "depois": "after", "desde": "since",
+                "para": "for/to", "de": "of/from", "em": "in/on/at", "até": "until", "contra": "against",
+                "ao lado de": "next to", "em frente a": "in front of", "atrás de": "behind", "perto de": "near", "longe de": "far from",
+                "dentro de": "inside of", "fora de": "outside of", "em cima de": "on top of", "embaixo de": "underneath",
+                "qual": "which", "quem": "who", "onde": "where", "quando": "when", "por que": "why", "como": "how", "quanto": "how much",
+                "o que": "what", "quem": "who", "onde": "where", "quando": "when", "por que": "why", "como": "how", "quanto": "how much"
+            };
+
+
+            const enToPtDictionary = {};
+            for (const key in ptToEnDictionary) {
+                enToPtDictionary[ptToEnDictionary[key].toLowerCase()] = key;
+            }
+
+            let activeDictionary = (direction === 'pt-en') ? ptToEnDictionary : enToPtDictionary;
+            let targetLangName = (direction === 'pt-en') ? 'Inglês' : 'Português';
+
+            let translatedText = text.replace(/(\b\w+\b)/g, (match) => {
+                const lowerCaseWord = match.toLowerCase();
+                let translatedWord = activeDictionary[lowerCaseWord];
+
+                if (translatedWord) {
+                    if (match.length > 0 && match.charAt(0) === match.charAt(0).toUpperCase()) {
+                        translatedWord = translatedWord.charAt(0).toUpperCase() + translatedWord.slice(1);
+                    }
+                    return translatedWord;
+                }
+                return match;
+            });
+
+            resultDiv.textContent = `Tradução Simplificada (${targetLangName}): \n\n"${translatedText}"`;
+        }
+
+        // --- Funções para o Gerador de Reflexões Profundas ---
+        function generateDeepThought() {
+            const outputDiv = document.getElementById('deepThoughtOutput');
+            const loopCounterDiv = document.getElementById('loopCounter'); // Referência ao novo elemento
+            
+            const randomIndex = Math.floor(Math.random() * deepThoughts.length);
+            const thought = deepThoughts[randomIndex];
+
+            thoughtCount++; // Incrementa o contador de reflexões
+            loopCounterDiv.textContent = `Reflexões geradas: ${thoughtCount.toString().padStart(2, '0')}`; // Atualiza o display
+
+            // Adiciona o pensamento ao final, mas limita a quantidade para não sobrecarregar
+            // Limitar a, por exemplo, 20 linhas para evitar que a div cresça demais
+            const currentContent = outputDiv.textContent;
+            const lines = currentContent.split('\n').filter(line => line.trim() !== ''); // Remove linhas vazias
+            if (lines.length >= 20) { // Mantém no máximo 20 linhas visíveis
+                lines.shift(); // Remove a linha mais antiga
+            }
+            lines.push(`[${new Date().toLocaleTimeString()}.${new Date().getMilliseconds().toString().padStart(3, '0')}] ${thought}`);
+            outputDiv.textContent = lines.join('\n');
+            outputDiv.scrollTop = outputDiv.scrollHeight; // Rola para o final
+        }
+
+        function updateCountdown() {
+            const countdownDiv = document.getElementById('loopCountdown');
+            const elapsedTime = Date.now() - startTime;
+            const remainingTime = LOOP_DURATION_MS - elapsedTime;
+
+            if (remainingTime <= 0) {
+                stopDeepThoughtLoop();
+                countdownDiv.textContent = 'Tempo restante: 00:00:00 - Loop Finalizado!';
+                return;
+            }
+
+            const totalSeconds = Math.floor(remainingTime / 1000);
+            const hours = Math.floor(totalSeconds / 3600);
+            const minutes = Math.floor((totalSeconds % 3600) / 60);
+            const seconds = totalSeconds % 60;
+
+            const format = (num) => num.toString().padStart(2, '0');
+            countdownDiv.textContent = `Tempo restante: ${format(hours)}:${format(minutes)}:${format(seconds)}`;
+        }
+
+        function startDeepThoughtLoop() {
+            const startBtn = document.getElementById('startLoopBtn');
+            const stopBtn = document.getElementById('stopLoopBtn');
+            const statusDiv = document.getElementById('loopStatus');
+            const outputDiv = document.getElementById('deepThoughtOutput');
+            const loopCounterDiv = document.getElementById('loopCounter');
+
+            // Limpa o output anterior ao iniciar um novo loop
+            outputDiv.textContent = ''; 
+            thoughtCount = 0; // Reseta o contador de reflexões
+            loopCounterDiv.textContent = `Reflexões geradas: 00`; // Reseta o display
+
+            startBtn.disabled = true;
+            stopBtn.disabled = false;
+            statusDiv.textContent = 'Status: Rodando...';
+
+            startTime = Date.now(); // Marca o início do loop
+
+            // Inicia o loop para gerar reflexões a cada 3ms
+            deepThoughtInterval = setInterval(generateDeepThought, 3); // Gera a cada 3 milissegundos
+
+            // Define o tempo limite para parar o loop (1h 45min 30s)
+            loopTimeout = setTimeout(() => {
+                stopDeepThoughtLoop();
+                statusDiv.textContent = 'Status: Finalizado por tempo.';
+            }, LOOP_DURATION_MS);
+
+            // Atualiza o contador regressivo a cada segundo
+            countdownInterval = setInterval(updateCountdown, 1000);
+
+            console.log(`Loop de reflexões iniciado por ${LOOP_DURATION_MS / 1000} segundos.`);
+        }
+
+        function stopDeepThoughtLoop() {
+            const startBtn = document.getElementById('startLoopBtn');
+            const stopBtn = document.getElementById('stopLoopBtn');
+            const statusDiv = document.getElementById('loopStatus');
+            const countdownDiv = document.getElementById('loopCountdown');
+
+            clearInterval(deepThoughtInterval); // Limpa o intervalo de geração
+            clearTimeout(loopTimeout); // Limpa o timeout de parada automática
+            clearInterval(countdownInterval); // Limpa o intervalo do contador
+
+            startBtn.disabled = false;
+            stopBtn.disabled = true;
+            statusDiv.textContent = 'Status: Parado';
+            countdownDiv.textContent = 'Tempo restante: 00:00:00'; // Reseta o contador ao parar
+            console.log("Loop de reflexões parado.");
+        }
+
+        // --- Função Genérica de Contador de Ocorrências ---
+        function performGenericCount() {
+            const text = document.getElementById('genericTextCount').value;
+            const countType = document.getElementById('countType').value;
+            const resultDiv = document.getElementById('genericCountResult');
+            resultDiv.textContent = '';
+
+            if (text.trim() === '') {
+                resultDiv.textContent = 'Nenhum texto para analisar.';
+                return;
+            }
+
+            const counts = {};
+            let items = [];
+
+            if (countType === 'word') {
+                // Remove pontuações (exceto apóstrofos que podem fazer parte de palavras), divide por espaços e filtra vazios
+                items = text.toLowerCase().replace(/['"“”‘’.?!,;:-]/g, '').split(/\s+/).filter(item => item.length > 0);
+            } else if (countType === 'sentence') {
+                // Divide por pontos finais, interrogação ou exclamação. Remove espaços em branco extras.
+                items = text.split(/[.!?]+/).map(sentence => sentence.trim()).filter(item => item.length > 0);
+            } else if (countType === 'line') {
+                // Divide por quebras de linha. Remove linhas vazias e espaços em branco extras.
+                items = text.split(/\r?\n/).map(line => line.trim()).filter(item => item.length > 0);
+            }
+
+            if (items.length === 0) {
+                resultDiv.textContent = 'Nenhum item encontrado para contagem.';
+                return;
+            }
+
+            items.forEach(item => {
+                counts[item] = (counts[item] || 0) + 1;
+            });
+
+            // Converte o objeto em um array de pares [item, contagem] e ordena pela contagem (maior primeiro)
+            const sortedCounts = Object.entries(counts).sort(([, countA], [, countB]) => countB - countA);
+
+            let output = `--- Contagem de Ocorrências (${countType === 'word' ? 'Palavras' : countType === 'sentence' ? 'Frases' : 'Linhas'}) ---\n\n`;
+            
+            sortedCounts.forEach(([item, count]) => {
+                output += `${item}: ${count.toString().padStart(2, '0')}\n`; // Formata com 2 dígitos
+            });
+            output += `\n--- Total de itens únicos: ${sortedCounts.length} ---\n`;
+            output += `--- Total de itens contados: ${items.length} ---`;
+            resultDiv.textContent = output;
+        }
+
+        // --- Funções para Ofuscador de Código (NOVA FUNÇÃO) ---
+        function obfuscateCode() {
+            const codeInput = document.getElementById('codeToObfuscate');
+            const resultDiv = document.getElementById('obfuscatedCodeResult');
+            const errorDiv = document.getElementById('obfuscateError');
+            resultDiv.textContent = '';
+            errorDiv.textContent = '';
+
+            const code = codeInput.value;
+
+            // Simulação de limite de 20KB
+            const MAX_SIZE_KB = 20;
+            const MAX_CHARS = MAX_SIZE_KB * 1024; // 1 KB = 1024 bytes, 1 char ~ 1 byte
+
+            if (code.length > MAX_CHARS) {
+                errorDiv.textContent = `Erro: O código excede o limite de ${MAX_SIZE_KB}KB. Por favor, reduza o tamanho do código.`;
+                return;
+            }
+
+            if (code.trim() === '') {
+                errorDiv.textContent = 'Por favor, cole um código para ofuscar.';
+                return;
+            }
+
+            let obfuscated = code;
+
+            // Remove comentários de linha (// para JS, # para Python)
+            obfuscated = obfuscated.replace(/\/\/.*/g, ''); // JS
+            obfuscated = obfuscated.replace(/#.*/g, '');   // Python
+
+            // Remove comentários de bloco (/* ... */) - apenas para JS
+            obfuscated = obfuscated.replace(/\/\*[\s\S]*?\*\//g, '');
+
+            // Remove quebras de linha e múltiplos espaços
+            obfuscated = obfuscated.replace(/(\r\n|\n|\r)/gm, ' '); // Substitui quebras de linha por espaço
+            obfuscated = obfuscated.replace(/\s{2,}/g, ' ');       // Substitui múltiplos espaços por um único espaço
+
+            // Remove espaços antes e depois de alguns caracteres de pontuação importantes para JS/Python
+            obfuscated = obfuscated.replace(/\s*([;=+\-*/(){}[\].,:!&|<>])\s*/g, '$1');
+
+            // --- Simulação de renomeação de variáveis/funções ---
+            // Isso é EXTREMAMENTE básico e pode quebrar o código.
+            // Um ofuscador real usaria AST (Abstract Syntax Tree) para analisar o código.
+            // Aqui, apenas substituímos palavras simples.
+            const keywordsToObfuscate = [
+                "meuBot", "index", "connect", "client", "message", "async", "function", "var", "let", "const", "def",
+                "console", "log", "send", "data", "process", "value", "result", "temp", "init", "handle", "execute",
+                "bot", "app", "router", "config", "token", "user", "password", "db", "database", "query"
+            ];
+            let obfuscatedMap = {};
+            let counter = 0;
+
+            keywordsToObfuscate.forEach(keyword => {
+                // Renomeia a palavra se ela for um nome de variável/função completo (delimitado por fronteiras de palavra)
+                const regex = new RegExp(`\\b${keyword}\\b`, 'g');
+                // Gera um nome ofuscado (ex: _0, _1, _2...)
+                const newName = `_${counter++}`;
+                // Mapeia o nome original para o ofuscado
+                obfuscatedMap[keyword] = newName;
+                obfuscated = obfuscated.replace(regex, newName);
+            });
+            
+            // Tenta renomear variáveis genéricas (muito rudimentar)
+            // CUIDADO: Esta parte é a mais provável de quebrar o código!
+            obfuscated = obfuscated.replace(/\b([a-zA-Z_]\w{2,10})\b/g, (match, p1) => {
+                // Evita renomear palavras reservadas ou números
+                if (!keywordsToObfuscate.includes(p1) && !isNaN(Number(p1)) && !['true', 'false', 'null', 'undefined'].includes(p1)) {
+                    if (!obfuscatedMap[p1]) {
+                        obfuscatedMap[p1] = `_${counter++}`;
+                    }
+                    return obfuscatedMap[p1];
+                }
+                return match;
+            });
+
+
+            resultDiv.textContent = `Código Ofuscado:\n\n${obfuscated}`;
+        }
+
+
+        // --- Funções de Cookie Consent e Seleção de Idioma ---
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (!localStorage.getItem('cookiesAccepted')) {
+                document.getElementById('cookieConsentBanner').style.display = 'flex';
+            } else {
+                // Se os cookies já foram aceitos, verifica se o idioma já foi definido
+                if (!localStorage.getItem('siteLanguage')) {
+                    showLanguageModal();
+                }
+            }
+        });
+
+        function acceptCookies() {
+            localStorage.setItem('cookiesAccepted', 'true');
+            document.getElementById('cookieConsentBanner').style.display = 'none';
+            showLanguageModal();
+        }
+
+        function showLanguageModal() {
+            const languageModal = document.getElementById('languageModal');
+            languageModal.classList.add('show');
+        }
+
+        function setLanguage() {
+            const languageSelector = document.getElementById('languageSelector');
+            const selectedLanguage = languageSelector.value;
+            localStorage.setItem('siteLanguage', selectedLanguage);
+            document.getElementById('languageModal').classList.remove('show');
+            // Aqui você pode adicionar lógica para realmente traduzir o conteúdo da página
+            // Para este exemplo, apenas armazenamos o idioma. Uma tradução real exigiria mais complexidade (JSON de idiomas, etc.)
+            console.log(`Idioma selecionado: ${selectedLanguage}`);
+            alert(`Idioma definido para: ${selectedLanguage}. Para uma tradução completa, você precisaria de um sistema de internacionalização (i18n) mais robusto.`);
+        }
+
+    </script>
+</body>
+  </html>
